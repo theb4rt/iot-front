@@ -33,7 +33,11 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.6",
     "@next/bundle-analyzer": "^12.3.1",
+    "@react-buddy/ide-toolbox": "^2.3.1",
+    "@react-buddy/palette-mantine": "^5.7.1",
+    "@react-buddy/palette-mui": "^5.0.1",
     "@tabler/icons": "^1.107.0",
+    "@types/socket.io-client": "^3.0.0",
     "cookies-next": "^2.1.1",
     "dayjs": "^1.11.6",
     "embla-carousel-react": "^7.0.3",
@@ -41,9 +45,7 @@
     "next": "^13.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@react-buddy/ide-toolbox": "^2.3.1",
-    "@react-buddy/palette-mui": "^5.0.1",
-    "@react-buddy/palette-mantine": "^5.7.1"
+    "socket.io-client": "^4.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",

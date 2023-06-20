@@ -4,6 +4,8 @@ import { getCookie, setCookie } from 'cookies-next';
 import Head from 'next/head';
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
+import DashboardLayout from '../layout/Dashboard/DashboardLayout';
+import { WebSocketProvider } from '../components/contexts/WebSocketContext';
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
     const {
@@ -31,18 +33,24 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
                 <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
                 <link rel="shortcut icon" href="/assets/images/b4rt.ico" />
             </Head>
-
-            <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-                <MantineProvider
-                  theme={{ colorScheme, ...fontFamilies }}
-                  withGlobalStyles
-                  withNormalizeCSS
+            <WebSocketProvider>
+                <ColorSchemeProvider
+                  colorScheme={colorScheme}
+                  toggleColorScheme={toggleColorScheme}
                 >
-                    <NotificationsProvider>
-                        <Component {...pageProps} />
-                    </NotificationsProvider>
-                </MantineProvider>
-            </ColorSchemeProvider>
+                    <MantineProvider
+                      theme={{ colorScheme, ...fontFamilies }}
+                      withGlobalStyles
+                      withNormalizeCSS
+                    >
+                        <NotificationsProvider>
+                            <DashboardLayout>
+                                <Component {...pageProps} />
+                            </DashboardLayout>
+                        </NotificationsProvider>
+                    </MantineProvider>
+                </ColorSchemeProvider>
+            </WebSocketProvider>
         </>
     );
 }

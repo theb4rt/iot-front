@@ -1,12 +1,12 @@
 import { AppShell } from '@mantine/core';
 
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import Sidebar from './Sidebar/Sidebar';
 import SidebarCollapsed from './Sidebar/SidebarCollapsed';
 import Headerbar from './HeaderBar';
 
-const DashboardLayout = () => {
-    const [collapsed, setCollapsed] = useState(true);
+const DashboardLayout = ({ children }: { children: ReactNode }) => {
+    const [collapsed, setCollapsed] = useState(false);
     const handleCollapse = () => {
         setCollapsed(!collapsed);
     };
@@ -26,7 +26,7 @@ const DashboardLayout = () => {
             })}
 
         >
-            {/* Your application here */}
+            {children}
         </AppShell>
     );
 };

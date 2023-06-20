@@ -60,7 +60,7 @@ const Sidebar = (props: SidebarProps) => {
         <Navbar width={{ sm: 250 }} p="md" className={classes.navbar}>
             <Navbar.Section className={classes.header}>
                 <Group position="center">
-                    <Image alt="logo" src={b4rtLogo} width={240} />
+                    <Image alt="logo" src={b4rtLogo} width={200} />
                     <Code sx={{ fontWeight: 700 }}>Live Sensors App</Code>
                 </Group>
             </Navbar.Section>
