@@ -1,15 +1,25 @@
-import { useEffect, useState } from 'react';
-import { Container, Grid } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+import { Container, Grid, Paper, Switch, useMantineTheme, Text, TextInput, Group, Button } from '@mantine/core';
 import io from 'socket.io-client';
-import { useMediaQuery } from '@mantine/hooks';
-import LiveSensorsCard from '../../components/LiveSensors/LiveSensorsCard';
-import Temperature from '../../../public/assets/images/temperature.png';
+import { randomId, useMediaQuery } from '@mantine/hooks';
+import { IconMoonStars, IconSun } from '@tabler/icons';
+import { useForm } from '@mantine/form';
+import LiveSensorsCard from '../../../../components/LiveSensors/LiveSensorsCard';
+import Temperature from '../../../../../public/assets/images/temperature.png';
+import LedSwitch from '../../../../components/LiveSensors/LedColors';
 
 const LiveSensors = () => {
     const [alertStatus, setAlertStatus] = useState(false);
     const [temperature, setTemperature] = useState(null);
     const [humidity, setHumidity] = useState(null);
     const isMobile = useMediaQuery('(max-width: 768px)');
+    const theme = useMantineTheme();
+    const form = useForm({
+        initialValues: {
+            tempThreshold: '',
+        },
+    });
+    const [submittedValues, setSubmittedValues] = useState('');
 
     useEffect(() => {
         const socket = io('http://192.168.1.2:4000');
@@ -67,23 +77,33 @@ const LiveSensors = () => {
         >
             <Grid>
                 <Grid.Col md={6} lg={3}>
-                    <LiveSensorsCard
-                      cardImage={Temperature}
-                      alertStatus={alertStatus}
-                      sensorName="Temperature"
-                      sensorValue={temperature || '-'}
+                    <LedSwitch color="violet" tittle="Violet" />
+                </Grid.Col>
 
-                    />
+                <Grid.Col md={6} lg={3}>
+                    <LedSwitch color="grape" tittle="Grape" />
+                </Grid.Col>
+
+                <Grid.Col md={6} lg={3}>
+                    <LedSwitch color="gray" tittle="Gray" />
+                </Grid.Col>
+
+                <Grid.Col md={6} lg={3}>
+                    <LedSwitch color="indigo" tittle="Magenta" />
                 </Grid.Col>
                 <Grid.Col md={6} lg={3}>
-                    <LiveSensorsCard
-                      cardImage={Temperature}
-                      alertStatus={false}
-                      sensorName="Humidity   "
-                      sensorValue={humidity || '-'}
-
-                    />
+                    <LedSwitch color="yellow" tittle="Yellow" />
                 </Grid.Col>
+                <Grid.Col md={6} lg={3}>
+                    <LedSwitch color="orange" tittle="Orange" />
+                </Grid.Col>
+                <Grid.Col md={6} lg={3}>
+                    <LedSwitch color="cyan" tittle="Cyan" />
+                </Grid.Col>
+                <Grid.Col md={6} lg={3}>
+                    <LedSwitch color="green" tittle="Green" />
+                </Grid.Col>
+
             </Grid>
         </Container>
     );
