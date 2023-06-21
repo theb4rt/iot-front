@@ -17,7 +17,11 @@ module.exports = {
     },
     rules: {
         'react/react-in-jsx-scope': 'off',
+        '@typescript-eslint/no-throw-literal': 'off',
+        'no-console': 'off',
         'max-len': ['error', {code: 120}],
-        "arrow-body-style": "off"
+        "arrow-body-style": "off",
+        "@next/next/no-server-import-in-page": "off"
+
     },
 };

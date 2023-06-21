@@ -19,7 +19,7 @@ export const menuElements = [
         dropdownElements: [
             {
                 label: 'Live Sensor Data',
-                route: '/live/sensor-data',
+                route: '/sensors/live',
                 iconDropdown: IconCalendarStats,
             },
 
@@ -50,7 +50,19 @@ export const menuElements = [
         dropdownElements: [
             {
                 label: 'Sensors',
-                route: '/historical/temperature',
+                route: '/sensors/modify',
+                iconDropdown: IconCloudComputing,
+            },
+        ],
+    },
+    {
+        label: 'Led Test',
+        icon: IconCloudComputing,
+        initiallyOpened: false,
+        dropdownElements: [
+            {
+                label: 'Led Test',
+                route: '/sensors/modify/leds',
                 iconDropdown: IconCloudComputing,
             },
         ],
