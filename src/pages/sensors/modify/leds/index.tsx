@@ -3,18 +3,18 @@ import { Container, Grid } from '@mantine/core';
 import io from 'socket.io-client';
 import { useMediaQuery } from '@mantine/hooks';
 import LedSwitch from '../../../../components/LiveSensors/LedColors';
-import ChangeValueService from '../../../../../services/changeValuesService';
+import SensorValuesService from '../../../../../services/sensorValuesService';
 
 const LiveSensors = () => {
     const isMobile = useMediaQuery('(max-width: 768px)');
     const [submittedValues, setSubmittedValues] = useState('');
     const [activeLedColor, setActiveLedColor] = useState<Number>(-1);
-    const changeValueService = new ChangeValueService();
+    const sensorValuesService = new SensorValuesService();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await changeValueService.configure_led(activeLedColor);
+                const response = await sensorValuesService.configure_led(activeLedColor);
                 console.log(response);
             } catch (error) {
                 console.error('Error performing LED color request:', error);

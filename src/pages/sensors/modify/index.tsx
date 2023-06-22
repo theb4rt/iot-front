@@ -2,62 +2,49 @@ import React, { useEffect, useState } from 'react';
 import { Container, Grid, Paper, Switch, useMantineTheme, Text, TextInput, Group, Button } from '@mantine/core';
 import io from 'socket.io-client';
 import { randomId, useMediaQuery } from '@mantine/hooks';
-import { IconMoonStars, IconSun } from '@tabler/icons';
+import { IconCheck, IconMoonStars, IconSun, IconX } from '@tabler/icons';
 import { useForm } from '@mantine/form';
 import LiveSensorsCard from '../../../components/LiveSensors/LiveSensorsCard';
 import Temperature from '../../../../public/assets/images/temperature.png';
 import LedSwitch from '../../../components/LiveSensors/LedColors';
+import config from '../../../../config';
+import SensorValuesService from '../../../../services/sensorValuesService';
 
 const LiveSensors = () => {
-    const [alertStatus, setAlertStatus] = useState(false);
-    const [temperature, setTemperature] = useState(null);
-    const [humidity, setHumidity] = useState(null);
-    const isMobile = useMediaQuery('(max-width: 768px)');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [actualLedOn, setActualLedOn] = useState(99);
+    const [actualThresholdTem, setActualThresholdTem] = useState(0);
+    const [actualTestModeStatus, setActualTestModeStatus] = useState(false);
+
+    const [checked, setChecked] = useState(false);
     const theme = useMantineTheme();
+
+    const isMobile = useMediaQuery('(max-width: 768px)');
     const form = useForm({
         initialValues: {
             tempThreshold: '',
         },
     });
     const [submittedValues, setSubmittedValues] = useState('');
+    const sensorValuesService = new SensorValuesService();
 
     useEffect(() => {
-        const socket = io('http://192.168.1.2:4000');
+        const socket = io(config.websocket_url);
 
-        let alertTimeout: any = null;
+        const alertTimeout: any = null;
 
-        socket.on('sensorData', (message) => {
+        socket.on('actualValues', (message) => {
             let data;
+            console.log(message);
             try {
                 data = JSON.parse(message);
             } catch (error) {
                 console.error('Error parsing WebSocket message:', error);
                 return;
             }
-
-            const latestData = data[data.length - 1];
-            console.log(latestData);
-
-            setTemperature(latestData.temperature);
-            setHumidity(latestData.humidity);
-        });
-
-        socket.on('alertData', (message) => {
-            let data;
-            try {
-                data = JSON.parse(message);
-            } catch (error) {
-                console.error('Error parsing WebSocket message:', error);
-                return;
-            }
-
-            clearTimeout(alertTimeout);
-
-            setAlertStatus(data.alertStatus);
-
-            alertTimeout = setTimeout(() => {
-                setAlertStatus(false);
-            }, 5000);
+            setActualLedOn(data.actualLedOn);
+            setActualThresholdTem(data.actualThresholdTem);
+            setActualTestModeStatus(data.actualTestModeStatus);
         });
 
         return () => {
@@ -65,6 +52,36 @@ const LiveSensors = () => {
             clearTimeout(alertTimeout);
         };
     }, []);
+
+    useEffect(() => {
+            const fetchData = async () => {
+                try {
+                    const response = await sensorValuesService.get_sensor_values();
+                    console.log(response);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            };
+            fetchData();
+        }, []
+    );
+
+    const changeTestMode = async (testMode: boolean) => {
+        try {
+            console.log('testMode: ', testMode);
+            const response = await sensorValuesService.changeTestMode(testMode);
+            console.log(response);
+            // Handle the response if needed
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const handleClickTestMode = () => {
+        const testMode = !actualTestModeStatus;
+        changeTestMode(testMode);
+        setActualTestModeStatus(testMode);
+    };
 
     return (
         <Container
@@ -88,23 +105,24 @@ const LiveSensors = () => {
                     >
                         <Text> Test Mode Status</Text>
                         <Switch
-                          size="xl"
-                          color="yellow"
-                          onLabel={
-                                <IconSun
-                                  size={20}
-                                  stroke={2.5}
-                                  color={theme.colors.yellow[4]}
-
-                                />
-                            }
-                          offLabel={
-                                <IconMoonStars
-                                  size={20}
-                                  stroke={2.5}
-                                  color={theme.colors.blue[6]}
-
-                                />
+                          checked={actualTestModeStatus}
+                          onChange={() => handleClickTestMode()}
+                          color="teal"
+                          size="md"
+                          thumbIcon={
+                                checked ? (
+                                    <IconCheck
+                                      size={12}
+                                      color={theme.colors.teal[theme.fn.primaryShade()]}
+                                      stroke={3}
+                                    />
+                                ) : (
+                                    <IconX
+                                      size={12}
+                                      color={theme.colors.red[theme.fn.primaryShade()]}
+                                      stroke={3}
+                                    />
+                                )
                             }
                         />
                     </Paper>
@@ -151,7 +169,14 @@ const LiveSensors = () => {
                           onSubmit={form.onSubmit((values) => setSubmittedValues(JSON.stringify(values, null, 2)))}
                         >
                             <Text size="lg">Temperature Threshold</Text>
-                            <TextInput label="Current Value" placeholder="-" disabled />
+                            <TextInput
+                              label="Current Value"
+                              placeholder={`${actualThresholdTem} °C`}
+                              disabled
+                              styles={{
+                                    input: { fontSize: '20px' },
+                                }}
+                            />
                             <TextInput
                               mt="md"
                               label="Enter new value"

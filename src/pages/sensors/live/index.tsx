@@ -65,7 +65,7 @@ const LiveSensors = () => {
             }}
           color="yellow"
         >
-            <Grid >
+            <Grid>
                 <Grid.Col md={6} lg={3}>
                     <LiveSensorsCard
                       cardImage={Temperature}

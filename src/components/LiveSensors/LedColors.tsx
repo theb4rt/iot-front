@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { Paper, Switch, Text, useMantineTheme } from '@mantine/core';
+import { Paper, Switch, Text } from '@mantine/core';
 
 interface AlertBadgeProps {
     id: number;
