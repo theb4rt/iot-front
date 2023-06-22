@@ -3,6 +3,7 @@ import io, { Socket } from 'socket.io-client';
 
 import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons';
+import config from '../../../config';
 
 type WebSocketContextType = {
     alertStatus: boolean;
@@ -24,7 +25,7 @@ export const WebSocketProvider = ({ children }: WebSocketProviderProps) => {
     const capitalize = (string: string) => string[0].toUpperCase() + string.slice(1)
         .toLowerCase();
     useEffect(() => {
-        const ws = io('http://192.168.1.2:4000');
+        const ws = io(config.websocket_url);
         setSocket(ws);
 
         ws.on('alertData', (message) => {

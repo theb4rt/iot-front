@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import { useMediaQuery } from '@mantine/hooks';
 import LiveSensorsCard from '../../../components/LiveSensors/LiveSensorsCard';
 import Temperature from '../../../../public/assets/images/temperature.png';
+import config from '../../../../config';
 
 const LiveSensors = () => {
     const [alertStatus, setAlertStatus] = useState(false);
@@ -12,7 +13,7 @@ const LiveSensors = () => {
     const isMobile = useMediaQuery('(max-width: 768px)');
 
     useEffect(() => {
-        const socket = io('http://192.168.1.2:4000');
+        const socket = io(config.websocket_url);
 
         let alertTimeout: any = null;
 
