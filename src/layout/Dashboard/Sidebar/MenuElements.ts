@@ -1,4 +1,4 @@
-import { IconCalendarStats, IconCloudComputing, IconLayoutDashboard, IconNetwork, IconWorldWww } from '@tabler/icons';
+import { IconCalendarStats, IconEdit, IconHistory, IconLayoutDashboard, IconNetwork, IconTestPipe } from '@tabler/icons';
 
 export const menuElements = [
     {
@@ -20,14 +20,14 @@ export const menuElements = [
             {
                 label: 'Live Sensor Data',
                 route: '/sensors/live',
-                iconDropdown: IconCalendarStats,
+                iconDropdown: IconNetwork,
             },
 
         ],
     },
     {
         label: 'Historical',
-        icon: IconWorldWww,
+        icon: IconHistory,
         initiallyOpened: false,
         dropdownElements: [
             {
@@ -45,25 +45,25 @@ export const menuElements = [
     },
     {
         label: 'Modify Sensors',
-        icon: IconCloudComputing,
+        icon: IconEdit,
         initiallyOpened: false,
         dropdownElements: [
             {
-                label: 'Sensors',
+                label: 'Change Data Sensors',
                 route: '/sensors/modify',
-                iconDropdown: IconCloudComputing,
+                iconDropdown: IconEdit,
             },
         ],
     },
     {
         label: 'Led Test',
-        icon: IconCloudComputing,
+        icon: IconTestPipe,
         initiallyOpened: false,
         dropdownElements: [
             {
                 label: 'Led Test',
                 route: '/sensors/modify/leds',
-                iconDropdown: IconCloudComputing,
+                iconDropdown: IconTestPipe,
             },
         ],
     },
