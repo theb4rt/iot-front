@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Grid, Paper, Switch, useMantineTheme, Text, TextInput, Group, Button } from '@mantine/core';
+import { Button, Container, Grid, Group, Paper, Switch, Text, TextInput, useMantineTheme } from '@mantine/core';
 import io from 'socket.io-client';
-import { randomId, useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconCheck, IconMoonStars, IconSun, IconX } from '@tabler/icons';
 import { useForm } from '@mantine/form';
-import LiveSensorsCard from '../../../components/LiveSensors/LiveSensorsCard';
-import Temperature from '../../../../public/assets/images/temperature.png';
-import LedSwitch from '../../../components/LiveSensors/LedColors';
 import config from '../../../../config';
 import SensorValuesService from '../../../../services/sensorValuesService';
 
@@ -15,17 +12,28 @@ const LiveSensors = () => {
     const [actualLedOn, setActualLedOn] = useState(99);
     const [actualThresholdTem, setActualThresholdTem] = useState(0);
     const [actualTestModeStatus, setActualTestModeStatus] = useState(false);
+    const [alertLedState, setAlertLedState] = useState(false);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [checked, setChecked] = useState(false);
     const theme = useMantineTheme();
 
     const isMobile = useMediaQuery('(max-width: 768px)');
+
     const form = useForm({
         initialValues: {
             tempThreshold: '',
         },
+        validate: {
+            tempThreshold: (value) => {
+                const numericValue = parseInt(value, 10);
+                const isValid = !Number.isNaN(numericValue) && value.trim().length > 0;
+                return isValid ? null : 'Invalid value';
+            },
+        },
+
     });
-    const [submittedValues, setSubmittedValues] = useState('');
+
     const sensorValuesService = new SensorValuesService();
 
     useEffect(() => {
@@ -45,6 +53,7 @@ const LiveSensors = () => {
             setActualLedOn(data.actualLedOn);
             setActualThresholdTem(data.actualThresholdTem);
             setActualTestModeStatus(data.actualTestModeStatus);
+            setAlertLedState(data.alertLedState);
         });
 
         return () => {
@@ -81,6 +90,33 @@ const LiveSensors = () => {
         const testMode = !actualTestModeStatus;
         changeTestMode(testMode);
         setActualTestModeStatus(testMode);
+    };
+
+    const changeAlertLedState = async (ledState: boolean) => {
+        try {
+            const response = await sensorValuesService.change_alert_led(ledState);
+            console.log(response);
+            // Handle the response if needed
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    const handleClickLedEmergency = () => {
+        const ledState = !alertLedState;
+        changeAlertLedState(ledState);
+        setAlertLedState(ledState);
+    };
+
+    const handleSubmitThreshold = async (event: { preventDefault: () => void; }) => {
+        event.preventDefault();
+        const { tempThreshold } = form.values;
+        try {
+            const response = await sensorValuesService.change_threshold_temp(Number(tempThreshold));
+            console.log(response);
+            setActualThresholdTem(Number(tempThreshold));
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (
@@ -143,6 +179,8 @@ const LiveSensors = () => {
                         <Switch
                           size="xl"
                           color="yellow"
+                          checked={alertLedState}
+                          onChange={() => handleClickLedEmergency()}
                           onLabel={
                                 <IconSun
                                   size={20}
@@ -165,9 +203,7 @@ const LiveSensors = () => {
                 </Grid.Col>
                 <Grid.Col md={6} lg={3}>
                     <Paper shadow="md" radius="lg" p="md" withBorder>
-                        <form
-                          onSubmit={form.onSubmit((values) => setSubmittedValues(JSON.stringify(values, null, 2)))}
-                        >
+                        <form onSubmit={handleSubmitThreshold}>
                             <Text size="lg">Temperature Threshold</Text>
                             <TextInput
                               label="Current Value"
@@ -188,11 +224,7 @@ const LiveSensors = () => {
                             <Group position="center" mt="xl">
                                 <Button
                                   variant="filled"
-                                  onClick={() =>
-                                        form.setValues({
-                                            tempThreshold: randomId(),
-                                        })
-                                    }
+                                  type="submit"
                                 >
                                     Send
                                 </Button>

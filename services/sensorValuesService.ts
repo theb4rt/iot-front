@@ -30,6 +30,25 @@ class SensorValuesService extends Service {
             },
         });
     }
+
+    change_threshold_temp(alert_threshold_temperature: number) {
+        return this.http('/arduino/change-value', {
+            method: 'POST',
+            body: {
+                alert_threshold_temperature,
+            },
+        });
+    }
+
+    change_alert_led(
+        alertLedState: boolean) {
+        return this.http('/arduino/change-value', {
+            method: 'POST',
+            body: {
+                led_alert: alertLedState,
+            },
+        });
+    }
 }
 
 export default SensorValuesService;
