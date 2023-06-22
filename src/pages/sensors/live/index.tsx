@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import { useMediaQuery } from '@mantine/hooks';
 import LiveSensorsCard from '../../../components/LiveSensors/LiveSensorsCard';
 import Temperature from '../../../../public/assets/images/temperature.png';
+import Humidity from '../../../../public/assets/images/humidity.png';
 import config from '../../../../config';
 
 const LiveSensors = () => {
@@ -78,7 +79,7 @@ const LiveSensors = () => {
                 </Grid.Col>
                 <Grid.Col md={6} lg={3}>
                     <LiveSensorsCard
-                      cardImage={Temperature}
+                      cardImage={Humidity}
                       alertStatus={false}
                       sensorName="Humidity   "
                       sensorValue={humidity || '-'}

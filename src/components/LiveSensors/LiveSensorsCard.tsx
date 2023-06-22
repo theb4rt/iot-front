@@ -26,7 +26,7 @@ const LiveSensorsCard = ({
 
     >
         <Card.Section component="a" style={{ textAlign: 'center' }}>
-            <Image alt="logo" src={cardImage} width={250} />
+            <Image alt="logo" src={cardImage} width={230} height={210} />
         </Card.Section>
 
         <Group position="apart" mt="md" mb="xs">
